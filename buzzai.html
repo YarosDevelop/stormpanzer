@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чат с нейросетью</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f7fc;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .messages {
+            height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 10px;
+        }
+        .user-message, .bot-message {
+            margin-bottom: 15px;
+        }
+        .user-message p, .bot-message p {
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .user-message p {
+            background-color: #d1f7d5;
+            margin-left: auto;
+            text-align: right;
+        }
+        .bot-message p {
+            background-color: #e9e9e9;
+        }
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            margin-right: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <h2>Чат с нейросетью</h2>
+    <div class="messages" id="messages">
+        <!-- Сообщения будут добавляться сюда -->
+    </div>
+    <input type="text" id="user-input" placeholder="Введите сообщение...">
+    <button onclick="sendMessage()">Отправить</button>
+</div>
+
+<script>
+    const apiKey = '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';
+    const apiUrl = 'https://api.openai.com/v1/completions'; // Используем старую версию для запроса
+
+    function sendMessage() {
+        const userInput = document.getElementById('user-input').value;
+        if (!userInput) return;
+
+        // Добавляем сообщение пользователя в чат
+        addMessage('user', userInput);
+        document.getElementById('user-input').value = '';
+
+        console.log("Отправляем запрос с сообщением: ", userInput);
+
+        // Отправляем запрос к API
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: "text-davinci-003", // Используем старую модель GPT-3 для этого запроса
+                prompt: userInput,
+                max_tokens: 150
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Ответ от нейросети:", data);
+            if (data.choices && data.choices[0] && data.choices[0].text) {
+                const botResponse = data.choices[0].text.trim();
+                addMessage('bot', botResponse);
+            } else {
+                console.error('Неверный формат ответа от API');
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка при отправке запроса:', error);
+        });
+    }
+
+    function addMessage(sender, message) {
+        const messagesContainer = document.getElementById('messages');
+        const messageElement = document.createElement('div');
+        messageElement.classList.add(sender + '-message');
+        messageElement.innerHTML = `<p>${message}</p>`;
+        messagesContainer.appendChild(messageElement);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+</script>
+
+</body>
+</html>
