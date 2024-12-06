@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Загрузка файла A0.5.5.zip</title>
+    <title>Автоматическая загрузка файла</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -25,25 +25,25 @@
             font-size: 24px;
             margin-bottom: 20px;
         }
-        .download-btn {
-            padding: 15px 25px;
-            background-color: #4CAF50;
-            color: white;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        .download-btn:hover {
-            background-color: #45a049;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Скачать файл A0.5.5.zip</h1>
-        <a href="A0.5.5.zip" class="download-btn" download>Скачать</a>
+        <h1>Файл будет загружен автоматически...</h1>
     </div>
+
+    <script>
+        // Автоматическая загрузка файла
+        window.onload = function() {
+            // Замените URL на путь к вашему файлу
+            var fileUrl = "A0.5.5.zip";
+            var link = document.createElement("a");
+            link.href = fileUrl;
+            link.download = "A0.5.5.zip"; // Название файла для скачивания
+            document.body.appendChild(link); // Добавляем ссылку в DOM
+            link.click(); // Имитируем клик для скачивания
+            document.body.removeChild(link); // Удаляем ссылку после скачивания
+        };
+    </script>
 </body>
 </html>
